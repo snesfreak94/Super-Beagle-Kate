@@ -28,6 +28,7 @@ function getDeltaTime()
 }
 
 var player = new Player();
+var enemy = new Enemy();
 var keyboard = new Keyboard();
 
 function run()
@@ -41,6 +42,9 @@ function run()
 	
 	player.update(deltaTime);
 	player.draw();
+
+	enemy.update(deltaTime);
+	enemy.draw();
 	
 	// update the frame counter
 	fpsTime += deltaTime;
