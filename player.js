@@ -29,7 +29,7 @@ Player.prototype.update = function(deltaTime)
 Player.prototype.draw = function()
 {
 	context.save();			
-		context.translate(this.x, this.y);
+		context.translate(this.position.x, this.position.y);
 		context.rotate(this.rotation);
 		context.drawImage(this.image, -this.width/2, -this.height/2);	
 	context.restore();	

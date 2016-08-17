@@ -3,10 +3,10 @@ var Enemy = function()
 	this.image = document.createElement("img");
 	this.x = canvas.width/4;
 	this.y = canvas.height/4;
-	this.width = 240;
-	this.height = 230;	
+	this.width = 96;
+	this.height = 90;	
 
-	this.image.src = "goomba.PNG";   
+	this.image.src = "smwgoomba.png";   
 };
 
 Enemy.prototype.update = function(deltaTime)
