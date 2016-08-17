@@ -1,4 +1,4 @@
-var Goomba = function()
+var Enemy = function()
 {	
 	this.image = document.createElement("img");
 	//this.x = canvas.width/2;
@@ -11,7 +11,7 @@ var Goomba = function()
 	this.image.src = "goomba.PNG";   
 };
 
-Goomba.prototype.update = function(deltaTime)
+Enemy.prototype.update = function(deltaTime)
 {
 	if( typeof(this.rotation) == "undefined" )
 		this.rotation = 0;                      // hang on, where did this variable come from?
@@ -26,7 +26,7 @@ Goomba.prototype.update = function(deltaTime)
     }
 }
 
-Goomba.prototype.draw = function()
+Enemy.prototype.draw = function()
 {
 	context.save();			
 		context.translate(this.x, this.y);
