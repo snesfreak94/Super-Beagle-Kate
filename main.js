@@ -31,6 +31,58 @@ var player = new Player();
 var enemy = new Enemy();
 var keyboard = new Keyboard();
 
+//-------------------- Don't modify anything above here
+
+var SCREEN_WIDTH = canvas.width;
+var SCREEN_HEIGHT = canvas.height;
+
+var LAYER_COUNT = 3;
+var MAP = { tw: 60, th: 15 };
+
+var TILE = 35;
+var TILESET_TILE = TILE * 2;
+var TILESET_PADDING = 2;
+var TILESET_SPACING = 2;
+var TILESET_COUNT_X = 14;
+var TILESET_COUNT_Y = 14;
+
+// some variables to calculate the Frames Per Second (FPS - this tells use
+// how fast our game is running, and allows us to make the game run at a 
+// constant speed)
+var fps = 0;
+var fpsCount = 0;
+var fpsTime = 0;
+
+// load the image to use for the level tiles
+var tileset = document.createElement("img");
+tileset.src = "tileset.png";
+
+//start drawmap
+function drawMap()
+{
+	for (var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++) 
+	{
+		var idx = 0;
+		for (var y = 0; y < level1.layers[layerIdx].height; y++) 
+		{
+			for (var x = 0; x < level1.layers[layerIdx].width; x++) 
+			{
+				if (level1.layers[layerIdx].data[idx] != 0) 
+				{
+					// the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile), so subtract one from the tileset id to get the
+					// correct tile
+					var tileIndex = level1.layers[layerIdx].data[idx] - 1;
+					var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * (TILESET_TILE + TILESET_SPACING);
+					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) * (TILESET_TILE + TILESET_SPACING);
+					context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x * TILE, (y - 1) * TILE, TILESET_TILE, TILESET_TILE);
+				}
+				idx++;
+			}
+		}
+	}
+}
+//end drawmap
+
 function run()
 {
 	context.fillStyle = "#ccc";
@@ -61,50 +113,6 @@ function run()
 	context.font="14px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
 }
-
-//-------------------- Don't modify anything above here
-
-var SCREEN_WIDTH = canvas.width;
-var SCREEN_HEIGHT = canvas.height;
-
-
-// some variables to calculate the Frames Per Second (FPS - this tells use
-// how fast our game is running, and allows us to make the game run at a 
-// constant speed)
-var fps = 0;
-var fpsCount = 0;
-var fpsTime = 0;
-
-// load an image to draw
-var chuckNorris = document.createElement("img");
-chuckNorris.src = "hero.png";
-
-function runOld()
-{
-	context.fillStyle = "#ccc";		
-	context.fillRect(0, 0, canvas.width, canvas.height);
-	
-	var deltaTime = getDeltaTime();
-	
-	context.drawImage(chuckNorris, SCREEN_WIDTH/2 - chuckNorris.width/2, SCREEN_HEIGHT/2 - chuckNorris.height/2);
-	
-		
-	// update the frame counter 
-	fpsTime += deltaTime;
-	fpsCount++;
-	if(fpsTime >= 1)
-	{
-		fpsTime -= 1;
-		fps = fpsCount;
-		fpsCount = 0;
-	}		
-		
-	// draw the FPS
-	context.fillStyle = "#f00";
-	context.font="14px Arial";
-	context.fillText("FPS: " + fps, 5, 20, 100);
-}
-
 
 //-------------------- Don't modify anything below here
 

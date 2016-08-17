@@ -1,10 +1,8 @@
 var Enemy = function()
 {	
 	this.image = document.createElement("img");
-	//this.x = canvas.width/2;
-	//this.y = canvas.height/2; 	
-	this.position = new Vector2();
-    this.position.set(canvas.width / 2,canvas.height / 2);
+	this.x = canvas.width/4;
+	this.y = canvas.height/4;
 	this.width = 240;
 	this.height = 230;	
 
