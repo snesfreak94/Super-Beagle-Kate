@@ -189,6 +189,13 @@ function drawMap()
 }
 //end drawmap
 
+function playAgain()
+{
+    context.fillStyle = "#FFFF00";
+    context.font="30px Impact";
+    context.fillText("Press F5 to play again", 165, 340);
+}
+
 var splashTimer = 6;
 function runSplash(deltaTime)
 {
@@ -205,13 +212,18 @@ function runSplash(deltaTime)
  
 var spawnTimer = 3;
 var gameTimer = 20;
-function runGame()
+function runGame(deltaTime)
 {
+	gameTimer -= deltaTime;
+    if(gameTimer <= 0)
+    {
+        gameState = STATE_TIMESUP;
+        return;
+    }
+
 	context.fillStyle = "#ccc";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	drawMap();
-
-	var deltaTime = getDeltaTime();
 	
 	player.update(deltaTime);
 	player.draw();
