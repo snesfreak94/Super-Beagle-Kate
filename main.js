@@ -4,6 +4,14 @@ var context = canvas.getContext("2d");
 var startFrameMillis = Date.now();
 var endFrameMillis = Date.now();
 
+// define some constant values for the game states
+var STATE_SPLASH = 0;
+var STATE_GAME = 1;
+var STATE_GAMEOVER = 2;
+var STATE_TIMESUP = 3;
+
+var gameState = STATE_SPLASH;
+
 // This function will return the time in seconds since the function 
 // was last called
 // You should only call this function once per frame
@@ -27,8 +35,6 @@ function getDeltaTime()
 	return deltaTime;
 }
 
-var player = new Player();
-var enemy = new Enemy();
 var keyboard = new Keyboard();
 
 //-------------------- Don't modify anything above here
@@ -74,6 +80,9 @@ var JUMP = METER * 1500;
 var fps = 0;
 var fpsCount = 0;
 var fpsTime = 0;
+
+var player = new Player();
+var enemy = new Enemy();
 
 // load the image to use for the level tiles
 var tileset = document.createElement("img");
@@ -180,7 +189,23 @@ function drawMap()
 }
 //end drawmap
 
-function run()
+var splashTimer = 6;
+function runSplash(deltaTime)
+{
+    splashTimer -= deltaTime;
+    if(splashTimer <= 0)
+    {
+        gameState = STATE_GAME;
+        return;
+    }
+    context.fillStyle = "#FFFF00";
+    context.font="72px Impact";
+    context.fillText("PLATFORMER!", 140, 240);
+}
+ 
+var spawnTimer = 3;
+var gameTimer = 20;
+function runGame()
 {
 	context.fillStyle = "#ccc";
 	context.fillRect(0, 0, canvas.width, canvas.height);
@@ -208,6 +233,48 @@ function run()
 	context.fillStyle = "#f00";
 	context.font="14px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
+}
+
+function runGameOver(deltaTime)
+{
+    context.fillStyle = "#FF0000";
+    context.font="72px Impact";
+    context.fillText("GAME OVER", 140, 240);
+
+    playAgain();
+}
+
+function runTimesUp(deltaTime)
+{
+    context.fillStyle = "#FFFF00";
+    context.font="48px Impact";
+    context.fillText("YOU SURVIVED!", 200, 240);
+
+    playAgain();
+}
+
+function run()
+{
+    context.fillStyle = "#ccc";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+ 
+    var deltaTime = getDeltaTime();
+ 
+    switch(gameState)
+    {
+    case STATE_SPLASH:
+        runSplash(deltaTime);
+        break;
+    case STATE_GAME:
+        runGame(deltaTime);
+        break;
+    case STATE_GAMEOVER:
+        runGameOver(deltaTime);
+        break;
+    case STATE_TIMESUP:
+        runTimesUp(deltaTime);
+        break;
+    }
 }
 
 initialize();
