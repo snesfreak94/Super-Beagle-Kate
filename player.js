@@ -107,6 +107,8 @@ Player.prototype.update = function(deltaTime)
 		sfxFire.play();
 		this.cooldownTimer = 0.3;
 		// Shoot a bullet
+
+		//>>>>>>>>>>>>>>>>>>>> CREATE BULLET HERE <<<<<<<<<<<<<<<<<<<<<<<<<
 	}
 
 	var wasleft = this.velocity.x < 0;

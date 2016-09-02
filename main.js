@@ -56,7 +56,11 @@ var TILESET_COUNT_Y = 14;
 var ENEMY_MAXDX = METER * 5;
 var ENEMY_ACCEL = ENEMY_MAXDX * 2;
 
+var score = 0;
+var lives = 3;
+
 var enemies = [];
+var bullets = [];
 
 //collision constants
 var LAYER_COUNT = 3;
@@ -64,8 +68,8 @@ var LAYER_BACKGOUND = 0;
 var LAYER_PLATFORMS = 1;
 var LAYER_LADDERS = 2;
 
-var LAYER_OBJECT_ENEMIES = 3;
-var LAYER_OBJECT_TRIGGERS = 4;
+var LAYER_OBJECT_ENEMIES = 4;
+var LAYER_OBJECT_TRIGGERS = 3;
 
 // abitrary choice for 1m
 var METER = TILE;
@@ -111,7 +115,7 @@ function cellAtTileCoord(layer, tx, ty)
 {
 	if(tx<0 || tx>=MAP.tw || ty<0)
 	return 1;
-	
+
 	// let the player drop off the bottom of the screen (this means death)
 	if(ty>=MAP.th)
 	return 0;
@@ -318,12 +322,73 @@ function runGame(deltaTime)
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	drawMap();
 	
+	// score
+	context.fillStyle = "yellow";
+	context.font="32px Arial";
+	varscoreText = "Score: " + score;
+	context.fillText(score, SCREEN_WIDTH - 170, 35);
+
+	// life counter
+	for(vari=0; i<lives; i++)
+	{
+		context.drawImage(life.png, 20 + ((life.png.width+2)*i), 10);
+	}
+	
 	player.update(deltaTime);
 	player.draw();
 
 	enemy.update(deltaTime);
 	enemy.draw();
+
+	for(var i=0; i<enemies.length; i++)
+	{
+		enemies[i].update(deltaTime);
+	}
+
+	for(var i=0; i<enemies.length; i++)
+	{
+		enemies[i].draw();
+	}
+
+	for(var i=0; i<bullets.length; i++)
+	{
+		bullets[i].update(deltaTime);
+	}
+
+	for(var i=0; i<bullets.length; i++)
+	{
+		bullets[i].draw();
+	}
 	
+	var hit=false;
+	for(var i=0; i<bullets.length; i++)
+	{
+		bullets[i].update(deltaTime);
+		if( bullets[i].position.x - worldOffsetX < 0 ||
+		bullets[i].position.x - worldOffsetX > SCREEN_WIDTH)
+		{
+			hit = true;
+		}
+		for(var j=0; j<enemies.length; j++)
+		{
+			if(intersects( bullets[i].position.x, bullets[i].position.y, TILE, TILE,
+			enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
+			{
+				// kill both the bullet and the enemy
+				enemies.splice(j, 1);
+				hit = true;
+				// increment the player score
+				score += 1;
+				break;
+			}
+		}
+		if(hit == true)
+		{
+			bullets.splice(i, 1);
+			break;
+		}
+	}
+
 	// update the frame counter
 	fpsTime += deltaTime;
 	fpsCount++;
@@ -364,11 +429,6 @@ function run()
     context.fillRect(0, 0, canvas.width, canvas.height);
  
     var deltaTime = getDeltaTime();
-
-	for(var i=0; i<enemies.length; i++)
-	{
-		enemies[i].update(deltaTime);
-	}
 
     switch(gameState)
     {

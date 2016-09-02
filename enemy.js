@@ -67,8 +67,6 @@ Enemy.prototype.update = function(deltaTime)
 
 Enemy.prototype.draw = function()
 {
-	context.save();			
-		context.translate(this.x, this.y);
-		context.drawImage(this.image, -this.width/2, -this.height/2);	
-	context.restore();	
+	this.sprite.draw(context, this.position.x - worldOffsetX,
+	this.position.y);
 }
