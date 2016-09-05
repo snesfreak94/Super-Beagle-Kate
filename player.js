@@ -9,6 +9,8 @@
 	var ANIM_WALK_RIGHT = 5;
 	var ANIM_MAX = 6;
 
+	var MAX_LIVES = 3;
+
 var Player = function()
 {	
 	this.sprite = new Sprite("ChuckNorris.png");
@@ -44,6 +46,8 @@ var Player = function()
 	this.direction = LEFT;
 
 	this.cooldownTimer = 0;
+
+	this.lives = MAX_LIVES;
 };
 
 Player.prototype.update = function(deltaTime)
@@ -221,7 +225,18 @@ Player.prototype.update = function(deltaTime)
 
 	if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
 	{
-		// game over man, game over
+		gameState = STATE_WIN;
+        return;
+	}
+
+	if(this.position.y > 600)
+	{
+		this.position.set( 9*TILE, 0*TILE );
+		this.lives--;
+		if(this.lives < 1)
+		{
+			gameState = STATE_GAMEOVER;
+		}
 	}
 }
 
@@ -229,4 +244,6 @@ Player.prototype.draw = function()
 {
 	this.sprite.draw(context, this.position.x - worldOffsetX,
 	this.position.y);
+
+	context.fillText("Lives:" + this.lives.toString(),10,40);
 }

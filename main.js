@@ -9,6 +9,7 @@ var STATE_SPLASH = 0;
 var STATE_GAME = 1;
 var STATE_GAMEOVER = 2;
 var STATE_TIMESUP = 3;
+var STATE_WIN = 4;
 
 var gameState = STATE_SPLASH;
 
@@ -94,7 +95,7 @@ var fpsCount = 0;
 var fpsTime = 0;
 
 var player = new Player();
-var enemy = new Enemy();
+var enemy = new Enemy(100, 100);
 
 // load the image to use for the level tiles
 var tileset = document.createElement("img");
@@ -102,21 +103,21 @@ tileset.src = "tileset.png";
 
 function cellAtPixelCoord(layer, x,y)
 {
-	if(x<0 || x>SCREEN_WIDTH || y<0)
+	if(x<0 || x>SCREEN_WIDTH) // remove ‘|| y<0’
 	return 1;
-	
-	// let the player drop of the bottom of the screen (this means death)
+	// let the player drop off the bottom of the screen
+	// (this means death)
 	if(y>SCREEN_HEIGHT)
 	return 0;
 	return cellAtTileCoord(layer, p2t(x), p2t(y));
 };
 
-function cellAtTileCoord(layer, tx, ty)
+function cellAtTileCoord(layer, tx, ty) // remove ‘|| y<0’
 {
-	if(tx<0 || tx>=MAP.tw || ty<0)
+	if(tx<0 || tx>=MAP.tw)
 	return 1;
-
-	// let the player drop off the bottom of the screen (this means death)
+	// let the player drop off the bottom of the screen
+	// (this means death)
 	if(ty>=MAP.th)
 	return 0;
 	return cells[layer][ty][tx];
@@ -308,7 +309,7 @@ function runSplash(deltaTime)
 }
  
 var spawnTimer = 3;
-var gameTimer = 20;
+var gameTimer = 59;
 function runGame(deltaTime)
 {
 	gameTimer -= deltaTime;
@@ -416,16 +417,25 @@ function runGameOver(deltaTime)
 
 function runTimesUp(deltaTime)
 {
+    context.fillStyle = "#FF0000";
+    context.font="72px Impact";
+    context.fillText("TIME'S UP!", 200, 240);
+
+    playAgain();
+}
+
+function runWin(deltaTime)
+{
     context.fillStyle = "#FFFF00";
-    context.font="48px Impact";
-    context.fillText("YOU SURVIVED!", 200, 240);
+    context.font="60px Impact";
+    context.fillText("YOU SURVIVED!", 140, 240);
 
     playAgain();
 }
 
 function run()
 {
-    context.fillStyle = "#ccc";
+    context.fillStyle = "#00008B";
     context.fillRect(0, 0, canvas.width, canvas.height);
  
     var deltaTime = getDeltaTime();
@@ -443,6 +453,9 @@ function run()
         break;
     case STATE_TIMESUP:
         runTimesUp(deltaTime);
+        break;
+	case STATE_WIN:
+        runWin(deltaTime);
         break;
     }
 }
