@@ -1,7 +1,7 @@
 var Enemy = function(x, y)
 {
 	this.sprite = new Sprite("smwgoomba2.png");
-	this.sprite.buildAnimation(2, 1, 88, 94, 0.3, [0,1]);
+	this.sprite.buildAnimation(1, 1, 88, 94, 0.3, [0]);
 	this.sprite.setAnimationOffset(0, -35, -40);
 	
 	this.position = new Vector2();

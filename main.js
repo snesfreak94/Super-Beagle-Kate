@@ -319,7 +319,7 @@ function runGame(deltaTime)
         return;
     }
 
-	context.fillStyle = "#ccc";
+	context.fillStyle = "#00008B";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	drawMap();
 	
@@ -419,7 +419,7 @@ function runTimesUp(deltaTime)
 {
     context.fillStyle = "#FF0000";
     context.font="72px Impact";
-    context.fillText("TIME'S UP!", 200, 240);
+    context.fillText("TIME'S UP!", 140, 240);
 
     playAgain();
 }
