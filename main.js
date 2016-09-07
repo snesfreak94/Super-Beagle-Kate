@@ -54,11 +54,9 @@ var TILESET_SPACING = 2;
 var TILESET_COUNT_X = 14;
 var TILESET_COUNT_Y = 14;
 
-var ENEMY_MAXDX = METER * 5;
-var ENEMY_ACCEL = ENEMY_MAXDX * 2;
+var ALLOWED_TIME = 59;
 
 var score = 0;
-var lives = 3;
 
 var enemies = [];
 var bullets = [];
@@ -87,6 +85,9 @@ var FRICTION = MAXDX * 6;
 // (a large) instantaneous jump impulse
 var JUMP = METER * 1500;
 
+var ENEMY_MAXDX = METER * 5;
+var ENEMY_ACCEL = ENEMY_MAXDX * 2;
+
 // some variables to calculate the Frames Per Second (FPS - this tells use
 // how fast our game is running, and allows us to make the game run at a 
 // constant speed)
@@ -95,7 +96,8 @@ var fpsCount = 0;
 var fpsTime = 0;
 
 var player = new Player();
-var enemy = new Enemy(100, 100);
+var bullet = new Bullet();
+//var enemy = new Enemy(100, 100);
 
 // load the image to use for the level tiles
 var tileset = document.createElement("img");
@@ -287,6 +289,18 @@ function drawMap()
 }
 //end drawmap
 
+function intersects(x1, y1, w1, h1, x2, y2, w2, h2)
+{
+    if(y2 + h2 < y1 ||
+    x2 + w2 < x1 ||
+    x2 > x1 + w1 ||
+    y2 > y1 + h1)
+    {
+        return false;
+    }
+    return true;
+}
+
 function playAgain()
 {
     context.fillStyle = "#FFFF00";
@@ -307,9 +321,9 @@ function runSplash(deltaTime)
     context.font="72px Impact";
     context.fillText("PLATFORMER!", 140, 240);
 }
- 
+
 var spawnTimer = 3;
-var gameTimer = 59;
+var gameTimer = ALLOWED_TIME;
 function runGame(deltaTime)
 {
 	gameTimer -= deltaTime;
@@ -318,28 +332,45 @@ function runGame(deltaTime)
         gameState = STATE_TIMESUP;
         return;
     }
-
+	
 	context.fillStyle = "#00008B";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	drawMap();
 	
+	//time remaining
+	context.fillStyle = "red";
+	context.font="32px Impact";
+	//vartimeText = "TIME: " + gameTimer;
+	context.fillText(gameTimer.toFixed(2).toString(), SCREEN_WIDTH - 100, 35);
+	
 	// score
-	context.fillStyle = "yellow";
-	context.font="32px Arial";
-	varscoreText = "Score: " + score;
-	context.fillText(score, SCREEN_WIDTH - 170, 35);
+	context.fillStyle = "orange";
+	context.font="32px Impact";
+	//varscoreText = "SCORE: " + score;
+	context.fillText(score, SCREEN_WIDTH - 340, 35);
 
-	// life counter
-	for(vari=0; i<lives; i++)
+	var life =
 	{
-		context.drawImage(life.png, 20 + ((life.png.width+2)*i), 10);
-	}
+		image: document.createElement("img"),
+		width: 39,
+		height: 51,
+	};
+	// set the image for the lifeimage to use
+	life.image.src = "life.png";
+
+	context.drawImage(life.image, 0, 0);
+	// life counter
+	//for(vari=0; i<lives; i++)
+	//{
+	//	context.drawImage(life.png, 20 + ((life.png.width+2)*i), 10);
+	//}
+	
 	
 	player.update(deltaTime);
 	player.draw();
 
-	enemy.update(deltaTime);
-	enemy.draw();
+	//enemy.update(deltaTime);
+	//enemy.draw();
 
 	for(var i=0; i<enemies.length; i++)
 	{
@@ -379,7 +410,7 @@ function runGame(deltaTime)
 				enemies.splice(j, 1);
 				hit = true;
 				// increment the player score
-				score += 1;
+				score += 100;
 				break;
 			}
 		}
@@ -389,6 +420,18 @@ function runGame(deltaTime)
 			break;
 		}
 	}
+
+	// check if player intersects any enemy. If so, lose a life
+	//if(intersects
+    //      (player.x - player.width/2, player.y - player.height/2, player.width, player.height,
+	//		enemies[i].x- enemies[i].width/2, enemies[i].y - enemies[i].height/2, enemies[i].width, enemies[i].height) == true)
+    //       {
+    //          lives--;
+	//			if(lives < 1)
+	//			{
+	//				gameState = STATE_GAMEOVER;
+	//			}
+    //       }
 
 	// update the frame counter
 	fpsTime += deltaTime;
@@ -419,7 +462,7 @@ function runTimesUp(deltaTime)
 {
     context.fillStyle = "#FF0000";
     context.font="72px Impact";
-    context.fillText("TIME'S UP!", 140, 240);
+    context.fillText("TIME'S UP!", 155, 240);
 
     playAgain();
 }

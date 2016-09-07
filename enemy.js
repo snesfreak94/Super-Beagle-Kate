@@ -8,6 +8,7 @@ var Enemy = function(x, y)
 	this.position.set(x, y);
 	
 	this.velocity = new Vector2();
+	this.velocity.set(0, 0);
 	
 	this.moveRight = true;
 	this.pause = 0;

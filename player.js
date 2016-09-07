@@ -110,9 +110,17 @@ Player.prototype.update = function(deltaTime)
 	{
 		sfxFire.play();
 		this.cooldownTimer = 0.3;
-		// Shoot a bullet
 
-		//>>>>>>>>>>>>>>>>>>>> CREATE BULLET HERE <<<<<<<<<<<<<<<<<<<<<<<<<
+		// Shoot a bullet
+		// 50% Working
+		// bullet doesn't draw on screen
+
+		// don't forget to set the bullet's position
+		bullet.x = player.x;
+		bullet.y = player.y;
+
+		// finally, add the bullet to the bullets array
+		bullets.push(bullet);
 	}
 
 	var wasleft = this.velocity.x < 0;
@@ -245,5 +253,7 @@ Player.prototype.draw = function()
 	this.sprite.draw(context, this.position.x - worldOffsetX,
 	this.position.y);
 
-	context.fillText("Lives:" + this.lives.toString(),10,40);
+	context.fillStyle = "yellow";
+	context.font="32px Impact";
+	context.fillText("x" + this.lives.toString(), 45, 35);
 }
